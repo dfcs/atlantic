@@ -28,6 +28,7 @@ mqttClient.on('connect', () => {
 
 mqttClient.on('message', (topic, message) => {
   const luxValue = message.toString();
+  console.log(`Received Lux: ${luxValue}`); // <-- This should print in your Render logs
   io.emit('luxData', { lux: parseFloat(luxValue), timestamp: new Date() });
 });
 
