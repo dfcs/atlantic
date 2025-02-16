@@ -6,10 +6,10 @@ function LuxDashboard() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const socket = io(process.env.REACT_APP_BACKEND_URL);
+    const socket = io(process.env.REACT_APP_BACKEND_URL); // Environment variable from Render
     socket.on('luxData', (luxMessage) => {
       setData((prevData) => [
-        ...prevData.slice(-20),
+        ...prevData.slice(-20), // Keep the last 20 readings
         { time: new Date(luxMessage.timestamp).toLocaleTimeString(), lux: luxMessage.lux },
       ]);
     });

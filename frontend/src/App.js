@@ -1,7 +1,11 @@
 import LuxDashboard from './components/LuxDashboard';
 
 function App() {
-  return <LuxDashboard />;
+  return (
+    <div className="App">
+      <LuxDashboard />
+    </div>
+  );
 }
 
 export default App;
