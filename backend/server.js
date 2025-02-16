@@ -21,7 +21,7 @@ const mqttClient = mqtt.connect(mqttOptions);
 
 mqttClient.on('connect', () => {
   console.log('Connected to MQTT Broker');
-  mqttClient.subscribe('company/esp32/light', (err) => {
+  mqttClient.subscribe('devices/sensors/lux', (err) => {
     if (err) console.error('Subscription error:', err);
   });
 });
