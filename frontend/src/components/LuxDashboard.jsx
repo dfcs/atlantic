@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import IngredientsTab from "./IngredientsTab";
 import SensorSettingsTab from "./SensorSettingsTab";
 import SummaryTab from "./SummaryTab";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export default function LuxDashboard() {
   const [activeTab, setActiveTab] = useState("ingredients");
