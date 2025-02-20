@@ -1,36 +1,34 @@
+import { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
-import React, { useState } from "react";
-import IngredientsTab from "./IngredientsTab";
-import SensorSettingsTab from "./SensorSettingsTab";
-import SummaryTab from "./SummaryTab";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+function LuxDashboard() {
+  const [data, setData] = useState([]);
 
-export default function LuxDashboard() {
-  const [activeTab, setActiveTab] = useState("ingredients");
-  const [processData, setProcessData] = useState({
-    oilPhase: [],
-    waterPhase: [],
-    processingModule: "",
-    postProcessingModule: "",
-    processId: Date.now(),
-    sensorData: [],
-    totalTime: 0,
-  });
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_BACKEND_URL); // Environment variable from Render
+    socket.on('luxData', (luxMessage) => {
+      setData((prevData) => [
+        ...prevData.slice(-20), // Keep the last 20 readings
+        { time: new Date(luxMessage.timestamp).toLocaleTimeString(), lux: luxMessage.lux },
+      ]);
+    });
+
+    return () => socket.disconnect();
+  }, []);
 
   return (
-    <div className="p-4">
-      <div className="flex space-x-4">
-        <button onClick={() => setActiveTab("ingredients")}>Ingredients</button>
-        <button onClick={() => setActiveTab("sensors")}>Sensors</button>
-        <button onClick={() => setActiveTab("summary")}>Summary</button>
-      </div>
-
-      <div className="mt-4">
-        {activeTab === "ingredients" && <IngredientsTab setProcessData={setProcessData} processData={processData} />}
-        {activeTab === "sensors" && <SensorSettingsTab setProcessData={setProcessData} processData={processData} />}
-        {activeTab === "summary" && <SummaryTab processData={processData} />}
-      </div>
+    <div>
+      <h1>Lux Sensor Dashboard</h1>
+      <LineChart width={600} height={300} data={data}>
+        <CartesianGrid stroke="#ccc" />
+        <XAxis dataKey="time" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="lux" stroke="#8884d8" />
+      </LineChart>
     </div>
   );
 }
+
+export default LuxDashboard;
